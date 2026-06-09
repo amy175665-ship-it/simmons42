@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./reset.css" />
+    <title>simmons</title>
+    <style>
+        html { font-size: 10px; }
+        body { font-size: 1.6rem; font-family: sans-serif; margin: 0; }
+
+        .inner {
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;            
+            max-width: 1200px;            
+            margin: 0 auto;               
+        }
+        .top-bar .inner { padding: 20px; }
+        .logo a img { width: 120px; height: auto; display: block; }
+        .inner nav ul { font-size: 1.3rem; display: flex; gap: 20px; list-style: none; padding: 0; }
+
+        .main-nav .inner { padding: 10px 20px; }
+        .main-nav .inner nav { flex-grow: 1; }
+        .main-nav nav ul { display: flex; gap: 10px; list-style: none; padding: 0; }
+        .main-nav .util { flex-shrink: 0; display: flex; gap: 15px; }
+
+        /* 배너 스타일 */
+        .main-banner { position: relative; width: 100%; overflow: hidden; }
+        .banner-content { position: relative; width: 100%; height: 850px; }
+        
+        .slide { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            display: none; 
+        }
+        .slide:first-child { display: block; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
+
+        .main-banner .prev-btn,
+        .main-banner .next-btn {
+            width: 50px; height: 50px; color: white; background-color: rgba(0, 0, 0, 0.46);
+            position: absolute; top: 50%; transform: translateY(-50%); 
+            z-index: 10; border: none; border-radius: 50%; cursor: pointer;
+        }
+        .main-banner .prev-btn { left: 20px; }
+        .main-banner .next-btn { right: 20px; }
+
+        .dotWrap {
+            position: absolute; bottom: 80px; left: 50%;
+            transform: translateX(-50%); display: flex; z-index: 10;
+        }
+        .dot {
+            width: 100px; height: 5px;  background-color: white;
+            opacity: 0.5; transition: all 0.3s; cursor: pointer;
+        }
+        .dot.on { opacity: 1;}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="top-bar">
+            <div class="inner">
+                <h1 class="logo">
+                    <a href="/"><img src="https://storefront.cdn-nhncommerce.com/copy/mall-80678/simmons-6047/logo..png?424e219136d926979a29" alt="시몬스 로고" /></a>
+                </h1>
+                <nav>
+                    <ul>
+                        <li><a href="#">매장 안내</a></li>
+                        <li><a href="#">투어 예약</a></li>
+                        <li><a href="#">회원가입</a></li>
+                        <li><a href="#">로그인</a></li>
+                        <li><a href="#">고객센터</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="main-nav">
+            <div class="inner">
+                <nav>
+                    <ul>
+                        <li><a href="#">브랜드 소개</a></li>
+                        <li><a href="#">전체보기</a></li>
+                        <li><a href="#">뷰티레스트 블랙</a></li>
+                        <li><a href="#">뷰티레스트</a></li>
+                        <li><a href="#">프레임</a></li>
+                    </ul>
+                </nav>
+                <div class="util">
+                    <span><a href="#">장바구니</a></span>
+                    <span><a href="#">검색</a></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="main-banner">
+            <button class="prev-btn">&lt;</button>
+            <div class="banner-content">
+                <div class="slide"><img src="https://shopby-images.cdn-nhncommerce.com/Mall-No-sJ2P/20260430/100658.939074335/03_%EC%8B%9C%EB%AA%AC%EC%8A%A4_PC_banner_%EC%98%A4%ED%94%84%EB%9D%BC%EC%9D%B8%EA%B8%B0%ED%9A%8D%EC%A0%84_01-1.jpg" alt="배너1" /></div>
+                <div class="slide"><img src="https://shopby-images.cdn-nhncommerce.com/Mall-No-sJ2P/20260429/153514.265236178/02_%EC%8B%9C%EB%AA%AC%EC%8A%A4_PC_banner_%ED%86%B5%ED%95%A9%EA%B8%B0%ED%9A%8D%EC%A0%84_01.jpg" alt="배너2" /></div>
+                <div class="slide"><img src="https://storefront.cdn-nhncommerce.com/copy/mall-80678/simmons-6047/pc-top-01..jpg?f5b2ccebbc7924414115" alt="배너3" /></div>
+            </div>
+            <button class="next-btn">&gt;</button>
+            <div class="dotWrap">
+                <div class="dot on"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const slides = $(".slide");
+        const dots = $(".dot");
+        let index = 0;
+        let slideInterval;
+
+        function moveSlide(){
+            slides.stop(true, true).fadeOut(1000);
+            slides.eq(index).stop(true, true).fadeIn(1000);
+            dots.removeClass("on");
+            dots.eq(index).addClass("on");
+        }
+
+        function autoSlide(){
+            slideInterval = setInterval(function(){
+                index++;
+                if(index >= slides.length) index = 0;
+                moveSlide();
+            }, 3000);
+        }
+
+        $(".next-btn").on("click", function(){
+            clearInterval(slideInterval);
+            index++;
+            if(index >= slides.length) index = 0;
+            moveSlide();
+            autoSlide();
+        });
+
+        $(".prev-btn").on("click", function(){
+            clearInterval(slideInterval);
+            index--;
+            if(index < 0) index = slides.length - 1;
+            moveSlide();
+            autoSlide();
+        });
+
+        dots.on("click", function(){
+            clearInterval(slideInterval);
+            index = $(this).index();
+            moveSlide();
+            autoSlide();
+        });
+
+        autoSlide(); // 슬라이드 자동 시작
+    </script>
+</body>
+</html>
